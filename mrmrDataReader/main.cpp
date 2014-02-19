@@ -1,8 +1,7 @@
-/*
- * main.cpp
+/** @file main.cpp
+ *  @brief This contains a method to transform csv files into mrmr binary files.
  *
- *  Created on: 22/11/2013
- *      Author: iago
+ *  @author Iago Lastra (IagoLast)
  */
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +17,12 @@
 using namespace std;
 typedef unsigned char byte;
 
+/**
+ * 	@brief Function to check if a key apears in a map.
+ *	@param key the key that you are looking for
+ *	@param mymap the map where you are going to check.
+ *	@returns A boolean value depending if the key apears or not.
+ */
 bool contains(string key, map<string, byte> mymap) {
 	map<string, byte>::iterator it = mymap.find(key);
 	if (it == mymap.end()) {
@@ -26,7 +31,11 @@ bool contains(string key, map<string, byte> mymap) {
 	return true;
 }
 
-
+/**
+ *@brief Translates a csv file into a binary file.
+ *@brief Each different value will be mapped into an integer
+ *@brief value from 0 to 255.
+ */
 int main(int argc, char* argv[]) {
 	int datasize = 0;
 	unsigned int featuresSize = 0;
@@ -101,7 +110,8 @@ int main(int argc, char* argv[]) {
 					lastCategory[featurePos]++;
 				}
 				data = translationsVector[featurePos][token];
-				outputFile.write(reinterpret_cast<char*>(&data), sizeof(byte)); //TODO: Guardar en un buffer los bytes de la linea y escribir linea a linea.
+				//TODO: Use a buffer to write data.
+				outputFile.write(reinterpret_cast<char*>(&data), sizeof(byte));
 			}
 		}
 		cout << "ALL OK \n";
