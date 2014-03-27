@@ -50,8 +50,8 @@ int main(int argc, char* argv[]) {
 
 //Parse console arguments.
 	if (argc < 2) {
-		cout << argv[0] << "\n";
-		cout << argv[1] << "\n";
+		//cout << argv[0] << "\n";
+		//cout << argv[1] << "\n";
 		printf("Usage: <inputfilename> [options]\n");
 		exit(-1);
 	}
@@ -75,8 +75,9 @@ int main(int argc, char* argv[]) {
 		}
 
 //Print lines and features
-		cout << "Number of samples  in csv file: " << datasize  << "\n";
-		cout << "Number of features in csv file: " << featuresSize << "\n";
+		//cout << inputFilename;
+		//cout << "Number of samples  in csv file: " << datasize  << "\n";
+		//cout << "Number of features in csv file: " << featuresSize << "\n";
 
 //write datasize and featuresize:
 		outputFile.write(reinterpret_cast<char*>(&datasize), sizeof(datasize));
@@ -114,7 +115,7 @@ int main(int argc, char* argv[]) {
 				outputFile.write(reinterpret_cast<char*>(&data), sizeof(byte));
 			}
 		}
-		cout << "ALL OK \n";
+		//cout << "ALL OK \n";
 		outputFile.flush();
 		outputFile.close();
 		inputFile.close();
