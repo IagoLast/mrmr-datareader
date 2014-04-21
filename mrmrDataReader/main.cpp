@@ -38,9 +38,10 @@ bool contains(string key, map<string, byte> mymap) {
  */
 int main(int argc, char* argv[]) {
 	int datasize = 0;
-	unsigned int featuresSize = 0;
-	unsigned int featurePos = 0;
-	unsigned int i = 0;
+	uint featuresSize = 0;
+	uint featurePos = 0;
+	uint i = 0;
+	uint limitMod16;
 	string line;
 	string token;
 	byte data;
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
 
 //Count lines and features.
 	if (inputFile.is_open()) {
-		//Ignore first line (headers from csv)
+//Ignore first line (headers from csv)
 		getline(inputFile, line);
 		StringTokenizer strtk(line, ",");
 		while (strtk.hasMoreTokens()) {
@@ -73,14 +74,16 @@ int main(int argc, char* argv[]) {
 		while (getline(inputFile, line)) {
 			++datasize;
 		}
+		datasize++;
 
-//Print lines and features
-		//cout << inputFilename;
-		//cout << "Number of samples  in csv file: " << datasize  << "\n";
-		//cout << "Number of features in csv file: " << featuresSize << "\n";
+//Only %16 datasize can be computed on GPU.
+		limitMod16 = (datasize % 16);
+		datasize = datasize - limitMod16;
+		printf("DS: %d \n", datasize);
 
 //write datasize and featuresize:
-		outputFile.write(reinterpret_cast<char*>(&datasize), sizeof(datasize));
+		outputFile.write(reinterpret_cast<char*>(&datasize),
+				sizeof(datasize));
 		outputFile.write(reinterpret_cast<char*>(&featuresSize),
 				sizeof(featuresSize));
 
@@ -95,11 +98,22 @@ int main(int argc, char* argv[]) {
 			lastCategory.push_back(0);
 		}
 
-		//Ignore first line (headers from csv)
-		getline(inputFile, line);
-
+//Ignore first line (headers from csv)
+		getline(inputFile, line); //FIXME
+		uint lineCount = 0;
 //Read and translate file to binary.
 		while (getline(inputFile, line)) {
+			if (lineCount % 100000 == 0) {
+				printf("%d\n", lineCount);
+			}
+			if (lineCount == (datasize)) {
+				printf("lines: %d\n", lineCount);
+				printf(
+						"warning: dataset size is not mod 16, skipping %d samples\n",
+						limitMod16);
+				break;
+			}
+
 			featurePos = 0;
 			StringTokenizer strtk(line, ",");
 			while (strtk.hasMoreTokens()) {
@@ -114,8 +128,9 @@ int main(int argc, char* argv[]) {
 				//TODO: Use a buffer to write data.
 				outputFile.write(reinterpret_cast<char*>(&data), sizeof(byte));
 			}
+			lineCount++;
+
 		}
-		//cout << "ALL OK \n";
 		outputFile.flush();
 		outputFile.close();
 		inputFile.close();
