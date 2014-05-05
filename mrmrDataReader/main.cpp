@@ -51,14 +51,10 @@ int main(int argc, char* argv[]) {
 
 //Parse console arguments.
 	if (argc < 2) {
-		//cout << argv[0] << "\n";
-		//cout << argv[1] << "\n";
 		printf("Usage: <inputfilename> [options]\n");
 		exit(-1);
 	}
-
 	char* inputFilename = argv[1];
-
 	ifstream inputFile(inputFilename);
 	ofstream outputFile("data.mrmr", ios::out | ios::binary);
 
@@ -82,8 +78,7 @@ int main(int argc, char* argv[]) {
 		printf("DS: %d \n", datasize);
 
 //write datasize and featuresize:
-		outputFile.write(reinterpret_cast<char*>(&datasize),
-				sizeof(datasize));
+		outputFile.write(reinterpret_cast<char*>(&datasize), sizeof(datasize));
 		outputFile.write(reinterpret_cast<char*>(&featuresSize),
 				sizeof(featuresSize));
 
@@ -98,8 +93,8 @@ int main(int argc, char* argv[]) {
 			lastCategory.push_back(0);
 		}
 
-//Ignore first line (headers from csv)
-		getline(inputFile, line); //FIXME
+//Ignore first line (headers from csv) again.
+		getline(inputFile, line);
 		uint lineCount = 0;
 //Read and translate file to binary.
 		while (getline(inputFile, line)) {
@@ -107,13 +102,12 @@ int main(int argc, char* argv[]) {
 				printf("%d\n", lineCount);
 			}
 			if (lineCount == (datasize)) {
-				printf("lines: %d\n", lineCount);
-				printf(
-						"warning: dataset size is not mod 16, skipping %d samples\n",
-						limitMod16);
+				printf("Readed Samples: %d\n", lineCount);
+				if (limitMod16 != 0) {
+					printf("Ignoring last %d samples\n", limitMod16);
+				}
 				break;
 			}
-
 			featurePos = 0;
 			StringTokenizer strtk(line, ",");
 			while (strtk.hasMoreTokens()) {
