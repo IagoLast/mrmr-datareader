@@ -75,7 +75,6 @@ int main(int argc, char* argv[]) {
 //Only %16 datasize can be computed on GPU.
 		limitMod16 = (datasize % 16);
 		datasize = datasize - limitMod16;
-		printf("DS: %d \n", datasize);
 
 //write datasize and featuresize:
 		outputFile.write(reinterpret_cast<char*>(&datasize), sizeof(datasize));
@@ -99,12 +98,12 @@ int main(int argc, char* argv[]) {
 //Read and translate file to binary.
 		while (getline(inputFile, line)) {
 			if (lineCount % 100000 == 0) {
-				printf("%d\n", lineCount);
+				printf("...%d / %d\n", lineCount, datasize);
 			}
 			if (lineCount == (datasize)) {
 				printf("Readed Samples: %d\n", lineCount);
 				if (limitMod16 != 0) {
-					printf("Ignoring last %d samples\n", limitMod16);
+					printf("Last %d samples ignored.\n", limitMod16);
 				}
 				break;
 			}
