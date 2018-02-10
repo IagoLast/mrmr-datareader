@@ -22,3 +22,5 @@ Data is received in a sample-wise manner as it is shown in the next figure. Afte
 Thus, the manner in which data is stored in memory is altered to allow access to all the values of a feature in 
 a block-wise memory operation. 
 
+
+![.mrmr data structure](/image.png)
