@@ -11,6 +11,9 @@ The .csv data must meet the following requirements:
   
   
 ## Explanation
+
+Since to compute mutual informations between features we dont need to know the value itself we binarize the data using a single byte per
+feature value instead multiple ascii/utf8 chars leading to small & fast files.
   
 The access pattern of mRMR to the dataset is by feature in contrast to many other machine learning algorithms
 in which data is procesed by pattern.
@@ -18,8 +21,7 @@ in which data is procesed by pattern.
 Ahough being a low-level technical nuance this aspect can significantly degrade mRMR performance since random access 
 has a much greater cost than block-wise access. This is specially important in the case of GPU where data has to be transferred from CPU memory to GPU global memory.
 
-Data is received in a sample-wise manner as it is shown in the next figure. After processing the data all values are reorganized by feature
-Thus, the manner in which data is stored in memory is altered to allow access to all the values of a feature in 
+Data is received in a sample-wise manner as it is shown in the next figure. After processing the data all values are reorganized by feature Thus, the manner in which data is stored in memory is altered to allow access to all the values of a feature in 
 a block-wise memory operation. 
 
 
